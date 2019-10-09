@@ -1,7 +1,7 @@
 /*jslint node: true */
 "use strict";
 var fs = require('fs');
-var rocksdb = require('level-rocksdb');
+var rocksdb = require('level');
 var app_data_dir = require('./desktop_app.js').getAppDataDir();
 var path = app_data_dir + '/rocksdb';
 
