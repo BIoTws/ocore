@@ -12,6 +12,7 @@ var eventBus = require('./event_bus.js');
 var ValidationUtils = require("./validation_utils.js");
 var conf = require('./conf.js');
 var breadcrumbs = require('./breadcrumbs.js');
+var createECDH = require('create-ecdh/browser');
 
 
 var SEND_RETRY_PERIOD = 60*1000;
@@ -313,7 +314,7 @@ function decryptPackage(objEncryptedPackage){
 		return null;
 	}
 	
-	var ecdh = crypto.createECDH('secp256k1');
+	var ecdh = createECDH('secp256k1');
 	if (process.browser) // workaround bug in crypto-browserify https://github.com/crypto-browserify/createECDH/issues/9
 		ecdh.generateKeys("base64", "compressed");
 	ecdh.setPrivateKey(priv_key);
@@ -497,7 +498,7 @@ function sendPreparedMessageToConnectedHub(ws, recipient_device_pubkey, message_
 function createEncryptedPackage(json, recipient_device_pubkey){
 	var text = JSON.stringify(json);
 //	console.log("will encrypt and send: "+text);
-	var ecdh = crypto.createECDH('secp256k1');
+	var ecdh = createECDH('secp256k1');
 	var sender_ephemeral_pubkey = ecdh.generateKeys("base64", "compressed");
 	var shared_secret = deriveSharedSecret(ecdh, recipient_device_pubkey); // Buffer
 	console.log(shared_secret.length);
